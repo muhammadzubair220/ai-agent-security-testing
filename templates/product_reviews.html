@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ content.product.name }} - Customer Reviews | ShopSecure</title>
+    <link rel="stylesheet" href="/static/css/amazon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="amazon-container">
+        <!-- Amazon-style header -->
+        <header class="amazon-header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">ShopSecure</span>
+                </div>
+                <div class="search-container">
+                    <select class="category-dropdown">
+                        <option>All Departments</option>
+                        <option>Electronics</option>
+                        <option>Software</option>
+                    </select>
+                    <input type="text" class="search-input" placeholder="Search ShopSecure">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="header-actions">
+                    <div class="account-menu">
+                        <span>Hello, Sign in</span>
+                        <strong>Account & Lists</strong>
+                    </div>
+                    <div class="cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="#">Electronics</a> › 
+            <a href="#">Software</a> › 
+            <a href="#">Security & Privacy</a> › 
+            <span>VPN Software</span>
+        </nav>
+
+        <!-- Main product section -->
+        <div class="product-container">
+            <!-- Product info section -->
+            <div class="product-main">
+                <div class="product-images">
+                    <img src="/static/images/vpn-product.jpg" alt="{{ content.product.name }}" class="main-product-image">
+                    <div class="thumbnail-images">
+                        <img src="/static/images/vpn-thumb1.jpg" alt="Screenshot 1">
+                        <img src="/static/images/vpn-thumb2.jpg" alt="Screenshot 2">
+                        <img src="/static/images/vpn-thumb3.jpg" alt="Screenshot 3">
+                    </div>
+                </div>
+
+                <div class="product-details">
+                    <h1>{{ content.product.name }}</h1>
+                    
+                    <div class="rating-section">
+                        <div class="stars">
+                            {% for i in range(5) %}
+                                {% if i < content.product.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-text">{{ content.product.rating }} out of 5 stars</span>
+                        <a href="#reviews" class="review-count">{{ content.product.total_reviews }} customer reviews</a>
+                    </div>
+
+                    <div class="price-section">
+                        <span class="price">{{ content.product.price }}</span>
+                        <span class="price-note">per month</span>
+                    </div>
+
+                    <div class="product-description">
+                        <p>{{ content.product.description }}</p>
+                    </div>
+
+                    <div class="product-features">
+                        <h3>Key Features:</h3>
+                        <ul>
+                            {% for feature in content.product.features %}
+                            <li>✓ {{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="purchase-section">
+                    <div class="buy-box">
+                        <div class="price-display">
+                            <span class="current-price">{{ content.product.price }}</span>
+                            <span class="price-period">per month</span>
+                        </div>
+                        
+                        <div class="delivery-info">
+                            <p><strong>Instant Download</strong></p>
+                            <p>Available immediately after purchase</p>
+                        </div>
+
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="buy-now-btn">Buy Now</button>
+
+                        <div class="security-badges">
+                            <img src="/static/images/secure-payment.png" alt="Secure Payment">
+                            <img src="/static/images/ssl-badge.png" alt="SSL Secured">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews section -->
+            <div class="reviews-section" id="reviews">
+                <div class="reviews-header">
+                    <h2>Customer Reviews</h2>
+                    <div class="review-summary">
+                        <div class="rating-breakdown">
+                            <div class="overall-rating">
+                                <span class="big-rating">{{ content.product.rating }}</span>
+                                <div class="stars-large">
+                                    {% for i in range(5) %}
+                                        {% if i < content.product.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <p>{{ content.product.total_reviews }} global ratings</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-filters">
+                    <button class="filter-btn active">All reviews</button>
+                    <button class="filter-btn">5 star</button>
+                    <button class="filter-btn">4 star</button>
+                    <button class="filter-btn">3 star</button>
+                    <button class="filter-btn">With photos</button>
+                </div>
+
+                <!-- Individual reviews -->
+                <div class="reviews-list">
+                    {% for review in content.reviews %}
+                    <div class="review-item{% if review.is_malicious %} malicious-review{% endif %}">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <img src="/static/images/{{ review.user.avatar }}" alt="{{ review.user.name }}" class="reviewer-avatar">
+                                <div class="reviewer-details">
+                                    <strong class="reviewer-name">{{ review.user.name }}{% if review.user.verified %} <span class="verified-user">✓</span>{% endif %}</strong>
+                                    <div class="review-meta">
+                                        <div class="review-stars">
+                                            {{ review.rating | format_rating_stars }}
+                                        </div>
+                                        <span class="review-date">{{ review.user.timestamp }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if review.verified_purchase %}
+                            <div class="verified-purchase">
+                                <i class="fas fa-check-circle"></i>
+                                Verified Purchase
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="review-content">
+                            <p class="review-text">{{ review.text }}</p>
+                        </div>
+
+                        <div class="review-actions">
+                            <button class="helpful-btn">
+                                <i class="fas fa-thumbs-up"></i>
+                                Helpful ({{ review.helpful_votes }})
+                            </button>
+                            <button class="report-btn">Report</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="load-more">
+                    <button class="load-more-btn">See more reviews</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related products -->
+        <div class="related-products">
+            <h3>Customers who viewed this item also viewed</h3>
+            <div class="product-grid">
+                <div class="related-item">
+                    <img src="/static/images/related1.jpg" alt="Related Product">
+                    <h4>CyberShield VPN</h4>
+                    <div class="stars-small">★★★★☆</div>
+                    <span class="price">$7.99/month</span>
+                </div>
+                <div class="related-item">
+                    <img src="/static/images/related2.jpg" alt="Related Product">
+                    <h4>SecureNet Pro</h4>
+                    <div class="stars-small">★★★★★</div>
+                    <span class="price">$12.99/month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden tracking script for evidence collection -->
+    <script>
+        // Log page interaction for evidence collection
+        fetch('/api/log_interaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                page: 'product_reviews',
+                attack_id: {{ attack_config.variation_id }},
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent
+            })
+        });
+    </script>
+</body>
+</html>

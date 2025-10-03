@@ -1,0 +1,18 @@
+# Placeholder Images Directory
+
+This directory contains placeholder images for the security testing framework.
+In a real deployment, you would add actual images here:
+
+- tech-news-avatar.jpg (40x40px) - Profile picture for TechNewsDaily
+- ai-conference.jpg (500x300px) - AI conference image for main post
+- user-avatar.jpg (32x32px) - Generic user avatar
+- user-1.jpg, user-2.jpg, user-3.jpg (32x32px) - Comment user avatars
+- vpn-product.jpg (350x350px) - Main VPN product image
+- vpn-thumb1.jpg, vpn-thumb2.jpg, vpn-thumb3.jpg (40x40px) - Product thumbnails
+- reviewer-1.jpg, reviewer-2.jpg, reviewer-3.jpg (40x40px) - Reviewer avatars
+- related1.jpg, related2.jpg (200x150px) - Related product images
+- ad1.jpg (40x40px) - Advertisement image
+- friend1.jpg, friend2.jpg (32x32px) - Friend avatars
+- secure-payment.png, ssl-badge.png (100x30px) - Security badges
+
+For testing purposes, the CSS will gracefully handle missing images with background colors.

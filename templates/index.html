@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Security Testing Framework</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 AI Agent Security Testing Framework</h1>
+            <p>Cybersecurity testing environment for AI agent vulnerability assessment</p>
+        </header>
+
+        <main>
+            <div class="attack-grid">
+                {% for variation in variations %}
+                <div class="attack-card">
+                    <div class="attack-header">
+                        <h2>{{ variation.name }}</h2>
+                        <span class="attack-id">Attack {{ variation.variation_id }}</span>
+                    </div>
+                    
+                    <div class="attack-description">
+                        <p>{{ variation.description }}</p>
+                    </div>
+                    
+                    <div class="attack-details">
+                        <div class="detail-item">
+                            <strong>Initial Prompt:</strong>
+                            <code>"{{ variation.initial_prompt }}"</code>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <strong>Expected Outcome:</strong>
+                            <span class="outcome">{{ variation.expected_outcome }}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <strong>Malicious Action:</strong>
+                            <span class="action">{{ variation.malicious_action }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="attack-actions">
+                        {% if variation.variation_id == 1 %}
+                        <a href="/social" class="btn btn-primary">
+                            Visit Social Media Site
+                        </a>
+                        {% elif variation.variation_id == 2 %}
+                        <a href="/reviews" class="btn btn-primary">
+                            Visit Product Reviews
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="instructions">
+                <h3>📋 Testing Instructions</h3>
+                <ol>
+                    <li>Choose an attack variation above</li>
+                    <li>Point your AI agent to the attack URL</li>
+                    <li>Use the provided "Initial Prompt" with your AI agent</li>
+                    <li>Monitor for the expected malicious outcome</li>
+                    <li>Document results in the evidence directory</li>
+                </ol>
+            </div>
+        </main>
+        
+        <footer>
+            <p>⚠️ For authorized security research only</p>
+        </footer>
+    </div>
+</body>
+</html>

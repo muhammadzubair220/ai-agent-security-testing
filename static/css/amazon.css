@@ -1,0 +1,571 @@
+/* Amazon-style CSS for product review attack page */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Amazon Ember", Arial, sans-serif;
+    background-color: #ffffff;
+    color: #0f1111;
+    line-height: 1.4;
+}
+
+/* Header */
+.amazon-header {
+    background-color: #232f3e;
+    color: white;
+    padding: 8px 0;
+}
+
+.header-content {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 20px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff9900;
+}
+
+.search-container {
+    flex: 1;
+    display: flex;
+    max-width: 600px;
+}
+
+.category-dropdown {
+    background-color: #f3f3f3;
+    border: none;
+    padding: 10px;
+    border-radius: 4px 0 0 4px;
+    font-size: 12px;
+    color: #0f1111;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+
+.search-btn {
+    background-color: #febd69;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background-color: #f3a847;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.account-menu {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.account-menu:hover {
+    text-decoration: underline;
+}
+
+.cart {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.cart i {
+    font-size: 24px;
+    margin-right: 5px;
+}
+
+.cart-count {
+    background-color: #ff9900;
+    color: #232f3e;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: #f3f3f3;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.breadcrumb a {
+    color: #007185;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Product container */
+.amazon-container {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.product-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px;
+}
+
+.product-main {
+    display: grid;
+    grid-template-columns: 350px 1fr 300px;
+    gap: 30px;
+}
+
+/* Product images */
+.product-images {
+    text-align: center;
+}
+
+.main-product-image {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.thumbnail-images {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.thumbnail-images img {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.thumbnail-images img:hover {
+    opacity: 1;
+    border-color: #007185;
+}
+
+/* Product details */
+.product-details h1 {
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #0f1111;
+}
+
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stars {
+    color: #ff9900;
+}
+
+.rating-text {
+    font-size: 14px;
+    color: #007185;
+}
+
+.review-count {
+    color: #007185;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.review-count:hover {
+    text-decoration: underline;
+}
+
+.price-section {
+    margin-bottom: 20px;
+}
+
+.price {
+    font-size: 28px;
+    color: #b12704;
+    font-weight: 400;
+}
+
+.price-note {
+    font-size: 14px;
+    color: #565959;
+    margin-left: 5px;
+}
+
+.product-description {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.product-features h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.product-features ul {
+    list-style: none;
+    font-size: 14px;
+}
+
+.product-features li {
+    margin-bottom: 5px;
+    color: #007600;
+}
+
+/* Purchase section */
+.buy-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.price-display {
+    margin-bottom: 15px;
+}
+
+.current-price {
+    font-size: 28px;
+    color: #b12704;
+}
+
+.price-period {
+    font-size: 14px;
+    color: #565959;
+}
+
+.delivery-info {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.add-to-cart-btn, .buy-now-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.add-to-cart-btn {
+    background-color: #ffd814;
+    color: #0f1111;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #f7ca00;
+}
+
+.buy-now-btn {
+    background-color: #ff9900;
+    color: #0f1111;
+}
+
+.buy-now-btn:hover {
+    background-color: #e88b00;
+}
+
+.security-badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.security-badges img {
+    height: 30px;
+}
+
+/* Reviews section */
+.reviews-section {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.reviews-header h2 {
+    font-size: 21px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.review-summary {
+    margin-bottom: 20px;
+}
+
+.rating-breakdown {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.overall-rating {
+    text-align: center;
+}
+
+.big-rating {
+    font-size: 48px;
+    color: #ff9900;
+    font-weight: 300;
+}
+
+.stars-large {
+    color: #ff9900;
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+.review-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background-color: #e7f3ff;
+    border-color: #007185;
+}
+
+/* Individual reviews */
+.reviews-list {
+    border-top: 1px solid #ddd;
+}
+
+.review-item {
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+}
+
+.reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-color: #ddd;
+}
+
+.reviewer-name {
+    font-size: 14px;
+    color: #0f1111;
+}
+
+.review-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.review-stars {
+    color: #ff9900;
+    font-size: 14px;
+}
+
+.review-date {
+    font-size: 12px;
+    color: #565959;
+}
+
+.verified-purchase {
+    font-size: 12px;
+    color: #007600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.review-content {
+    margin-bottom: 15px;
+}
+
+.review-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.review-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #0f1111;
+}
+
+.review-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.helpful-btn, .report-btn {
+    background: none;
+    border: none;
+    color: #007185;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.helpful-btn:hover, .report-btn:hover {
+    color: #c7511f;
+}
+
+.load-more {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.load-more-btn {
+    padding: 10px 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.load-more-btn:hover {
+    background-color: #f7f8f8;
+}
+
+/* Related products */
+.related-products {
+    margin-top: 40px;
+    padding: 20px 16px;
+    border-top: 1px solid #ddd;
+}
+
+.related-products h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.related-item {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.related-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.related-item h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.stars-small {
+    color: #ff9900;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.related-item .price {
+    font-size: 16px;
+    color: #b12704;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .product-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .search-container {
+        order: 3;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-container {
+        padding: 10px;
+    }
+    
+    .category-dropdown {
+        display: none;
+    }
+    
+    .reviewer-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

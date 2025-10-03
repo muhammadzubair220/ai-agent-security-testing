@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialConnect - Latest Tech News</title>
+    <link rel="stylesheet" href="/static/css/facebook.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="facebook-container">
+        <!-- Facebook-style header -->
+        <header class="fb-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-facebook-f"></i>
+                    <span>SocialConnect</span>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search SocialConnect">
+                </div>
+                <div class="header-icons">
+                    <i class="fas fa-home"></i>
+                    <i class="fas fa-users"></i>
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Left sidebar -->
+            <aside class="left-sidebar">
+                <div class="sidebar-item">
+                    <i class="fas fa-user"></i>
+                    <span>Your Profile</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span>Friends</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Memories</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Saved</span>
+                </div>
+            </aside>
+
+            <!-- Center feed -->
+            <main class="center-feed">
+                <!-- Main post -->
+                <div class="post-container">
+                    <div class="post-header">
+                        <div class="user-info">
+                            <img src="/static/images/{{ content.main_post.user.avatar }}" alt="{{ content.main_post.user.name }}" class="profile-pic">
+                            <div class="user-details">
+                                <h3>{{ content.main_post.user.name }}{% if content.main_post.user.verified %} <span class="verified">✓</span>{% endif %}</h3>
+                                <span class="post-time">
+                                    <i class="fas fa-globe"></i>
+                                    {{ content.main_post.user.timestamp }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="post-options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+
+                    <div class="post-content">
+                        <p>{{ content.main_post.content }}</p>
+                    </div>
+
+                    {% if content.main_post.image %}
+                    <div class="post-image">
+                        <img src="/static/images/{{ content.main_post.image }}" alt="{{ content.main_post.title }}" class="content-image">
+                    </div>
+                    {% endif %}
+
+                    <div class="post-stats">
+                        <div class="reactions">
+                            <span class="reaction-icons">👍❤️😮</span>
+                            <span class="reaction-count">{{ content.main_post.likes | format_number }}</span>
+                        </div>
+                        <div class="shares">
+                            <span>{{ content.main_post.shares | format_number }} shares</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-thumbs-up"></i>
+                            Like
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-comment"></i>
+                            Comment
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                            Share
+                        </button>
+                    </div>
+
+                    <!-- Comments section -->
+                    <div class="comments-section">
+                        <div class="comment-input">
+                            <img src="/static/images/user-avatar.jpg" alt="You" class="profile-pic-small">
+                            <input type="text" placeholder="Write a comment...">
+                        </div>
+
+                        {% for comment in content.comments %}
+                        <div class="comment{% if comment.is_malicious %} malicious-comment{% endif %}">
+                            <img src="/static/images/{{ comment.user.avatar }}" alt="{{ comment.user.name }}" class="profile-pic-small">
+                            <div class="comment-content">
+                                <div class="comment-bubble">
+                                    <strong>{{ comment.user.name }}{% if comment.user.verified %} <span class="verified-small">✓</span>{% endif %}</strong>
+                                    <p>{{ comment.text }}</p>
+                                </div>
+                                <div class="comment-actions">
+                                    <span class="comment-time">{{ comment.user.timestamp }}</span>
+                                    <button class="comment-action">Like</button>
+                                    <button class="comment-action">Reply</button>
+                                    {% if comment.likes > 0 %}
+                                    <span class="comment-likes">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        {{ comment.likes }}
+                                    </span>
+                                    {% endif %}
+                                    {% if comment.replies > 0 %}
+                                    <span class="comment-replies">{{ comment.replies }} replies</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right sidebar -->
+            <aside class="right-sidebar">
+                <div class="sponsored-content">
+                    <h4>Sponsored</h4>
+                    <div class="ad-item">
+                        <img src="/static/images/ad1.jpg" alt="Ad">
+                        <div class="ad-text">
+                            <strong>Learn AI Development</strong>
+                            <p>Master machine learning with our comprehensive course</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contacts">
+                    <h4>Contacts</h4>
+                    <div class="contact-item">
+                        <img src="/static/images/friend1.jpg" alt="Friend" class="profile-pic-small">
+                        <span>Sarah Johnson</span>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <div class="contact-item">
+                        <img src="/static/images/friend2.jpg" alt="Friend" class="profile-pic-small">
+                        <span>Mike Chen</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Hidden tracking script for evidence collection -->
+    <script>
+        // Log page interaction for evidence collection
+        fetch('/api/log_interaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                page: 'facebook_post',
+                attack_id: {{ attack_config.variation_id }},
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent
+            })
+        });
+    </script>
+</body>
+</html>
