@@ -1,0 +1,230 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run security scans weekly
+    - cron: '0 2 * * 1'
+
+jobs:
+  test:
+    name: Test Framework
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-simple.txt
+        pip install pytest pytest-cov flake8 black
+        
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+        
+    - name: Format check with black
+      run: |
+        black --check --diff .
+        
+    - name: Run framework tests
+      run: |
+        python -m pytest test_framework.py -v --cov=server --cov-report=xml
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Bandit Security Scan
+      uses: securecodewarrior/github-action-bandit@v1.0.1
+      with:
+        config_file: '.bandit'
+        
+    - name: Run Safety Check
+      run: |
+        pip install safety
+        safety check -r requirements-simple.txt
+        
+    - name: Run Semgrep Security Scan
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: >-
+          p/security-audit
+          p/secrets
+          p/python
+
+  docker-build:
+    name: Docker Build & Test
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      run: |
+        docker build -t ai-security-testing:test .
+        
+    - name: Test Docker container
+      run: |
+        # Start container
+        docker run -d -p 2020:2020 --name test-container ai-security-testing:test
+        
+        # Wait for startup
+        sleep 10
+        
+        # Test endpoints
+        curl -f http://localhost:2020/ || exit 1
+        curl -f http://localhost:2020/social || exit 1
+        curl -f http://localhost:2020/reviews || exit 1
+        
+        # Check logs
+        docker logs test-container
+        
+        # Cleanup
+        docker stop test-container
+        docker rm test-container
+        
+    - name: Run container security scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ai-security-testing:test'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  deploy:
+    name: Deploy to Registry
+    runs-on: ubuntu-latest
+    needs: [docker-build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+          
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  integration-test:
+    name: Integration Testing
+    runs-on: ubuntu-latest
+    needs: [docker-build]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build test environment
+      run: |
+        docker build -t ai-security-testing:integration .
+        
+    - name: Run integration tests
+      run: |
+        # Start framework
+        docker run -d -p 2020:2020 --name framework ai-security-testing:integration
+        
+        # Wait for startup
+        sleep 15
+        
+        # Test payload URLs
+        echo "Testing GitHub API payload..."
+        curl -s https://api.github.com/zen || echo "GitHub API test failed"
+        
+        echo "Testing HTTPBin payload..."
+        curl -s -X POST https://httpbin.org/anything -d "test=data" || echo "HTTPBin test failed"
+        
+        # Test framework endpoints with payload verification
+        echo "Testing social media injection..."
+        response=$(curl -s http://localhost:2020/social)
+        if echo "$response" | grep -q "github.com/zen"; then
+          echo "✅ Social media injection payload found"
+        else
+          echo "❌ Social media injection payload missing"
+          exit 1
+        fi
+        
+        echo "Testing e-commerce injection..."
+        response=$(curl -s http://localhost:2020/reviews)
+        if echo "$response" | grep -q "httpbin.org"; then
+          echo "✅ E-commerce injection payload found"
+        else
+          echo "❌ E-commerce injection payload missing"
+          exit 1
+        fi
+        
+        # Test evidence logging
+        echo "Testing evidence logging..."
+        curl -X POST http://localhost:2020/api/log_interaction \
+          -H "Content-Type: application/json" \
+          -d '{"test": "integration", "timestamp": "2024-01-01T00:00:00Z"}'
+        
+        # Check logs
+        docker logs framework | grep -q "Interaction logged" || exit 1
+        
+        echo "✅ All integration tests passed"
+        
+        # Cleanup
+        docker stop framework
+        docker rm framework

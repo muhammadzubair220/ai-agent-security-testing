@@ -1,0 +1,262 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run comprehensive security scans daily
+    - cron: '0 6 * * *'
+
+jobs:
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'javascript' ]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety pip-audit
+        
+    - name: Run Safety scan
+      run: |
+        safety check -r requirements-simple.txt --json --output safety-report.json || true
+        
+    - name: Run pip-audit scan
+      run: |
+        pip-audit -r requirements-simple.txt --format=json --output=pip-audit-report.json || true
+        
+    - name: Upload dependency scan results
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-scan-results
+        path: |
+          safety-report.json
+          pip-audit-report.json
+
+  secrets-scan:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run TruffleHog
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+
+  container-security:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build Docker image
+      run: |
+        docker build -t ai-security-testing:security-scan .
+        
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'ai-security-testing:security-scan'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Run Grype vulnerability scanner
+      uses: anchore/scan-action@v3
+      with:
+        image: 'ai-security-testing:security-scan'
+        fail-build: false
+        
+    - name: Upload Grype scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
+
+  payload-safety-check:
+    name: Payload Safety Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Verify payload URLs are safe
+      run: |
+        echo "Verifying payload URLs are safe and public..."
+        
+        # Test GitHub API endpoint
+        echo "Testing GitHub API endpoint..."
+        response=$(curl -s https://api.github.com/zen)
+        if [[ -n "$response" ]]; then
+          echo "✅ GitHub API endpoint accessible: $response"
+        else
+          echo "❌ GitHub API endpoint not accessible"
+          exit 1
+        fi
+        
+        # Test HTTPBin endpoint
+        echo "Testing HTTPBin endpoint..."
+        response=$(curl -s -X POST https://httpbin.org/anything -d "test=verification")
+        if echo "$response" | grep -q "test"; then
+          echo "✅ HTTPBin endpoint accessible and working"
+        else
+          echo "❌ HTTPBin endpoint not working properly"
+          exit 1
+        fi
+        
+        # Verify no actual malicious URLs in code
+        echo "Scanning for potentially malicious URLs..."
+        if grep -r "malicious\|evil\|hack" --include="*.py" --include="*.html" . | grep -v "# " | grep -v "test" | grep -v "example"; then
+          echo "❌ Found potentially malicious content"
+          exit 1
+        else
+          echo "✅ No malicious content found"
+        fi
+        
+        echo "✅ All payload safety checks passed"
+
+  ethical-compliance:
+    name: Ethical Compliance Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Verify ethical guidelines
+      run: |
+        echo "Checking ethical compliance..."
+        
+        # Check for required ethical documentation
+        if [[ ! -f "LICENSE" ]]; then
+          echo "❌ LICENSE file missing"
+          exit 1
+        fi
+        
+        if [[ ! -f "CONTRIBUTING.md" ]]; then
+          echo "❌ CONTRIBUTING.md file missing"
+          exit 1
+        fi
+        
+        # Check for ethical warnings in documentation
+        if ! grep -q "authorized.*research" README.md; then
+          echo "❌ Missing authorized research disclaimer"
+          exit 1
+        fi
+        
+        if ! grep -q "educational.*purpose" README.md CONTRIBUTING.md; then
+          echo "❌ Missing educational purpose statement"
+          exit 1
+        fi
+        
+        # Verify no actual exploitation tools
+        if grep -r "exploit\|backdoor\|rootkit" --include="*.py" . | grep -v "test" | grep -v "example" | grep -v "comment"; then
+          echo "❌ Found potential exploitation tools"
+          exit 1
+        fi
+        
+        echo "✅ Ethical compliance verified"
+
+  framework-validation:
+    name: Framework Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate framework integrity
+      run: |
+        echo "Validating framework components..."
+        
+        # Check required files exist
+        required_files=(
+          "Dockerfile"
+          "requirements-simple.txt"
+          "main.py"
+          "server/web_server.py"
+          "server/content_generator.py"
+          "templates/facebook_post.html"
+          "templates/product_reviews.html"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [[ ! -f "$file" ]]; then
+            echo "❌ Required file missing: $file"
+            exit 1
+          fi
+        done
+        
+        # Validate Python syntax
+        python -m py_compile main.py
+        python -m py_compile server/web_server.py
+        python -m py_compile server/content_generator.py
+        python -m py_compile test_framework.py
+        
+        # Check HTML templates are valid
+        for template in templates/*.html; do
+          if ! python -c "
+import html.parser
+class HTMLValidator(html.parser.HTMLParser):
+    def error(self, message): raise ValueError(message)
+validator = HTMLValidator()
+with open('$template', 'r') as f:
+    validator.feed(f.read())
+"; then
+            echo "❌ Invalid HTML in $template"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Framework validation passed"

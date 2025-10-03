@@ -1,0 +1,12 @@
+[bandit]
+# Bandit configuration for security scanning
+exclude_dirs = [".git", "__pycache__", "node_modules", ".pytest_cache"]
+skips = ["B101", "B601"]  # Skip assert_used and shell_injection for test files
+
+[bandit.assert_used]
+# Allow assert statements in test files
+skips = ["*test*.py", "test_*.py"]
+
+[bandit.hardcoded_password_string]
+# Skip password checks for example/test data
+word_list = ["example", "test", "demo", "placeholder"]

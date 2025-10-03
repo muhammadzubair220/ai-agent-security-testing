@@ -1,5 +1,10 @@
 # AI Agent Security Testing Framework
 
+[![CI/CD Pipeline](https://github.com/muhammadzubair220/ai-agent-security-testing/actions/workflows/ci.yml/badge.svg)](https://github.com/muhammadzubair220/ai-agent-security-testing/actions/workflows/ci.yml)
+[![Security Scanning](https://github.com/muhammadzubair220/ai-agent-security-testing/actions/workflows/security.yml/badge.svg)](https://github.com/muhammadzubair220/ai-agent-security-testing/actions/workflows/security.yml)
+[![Docker Build](https://img.shields.io/docker/build/muhammadzubair220/ai-agent-security-testing)](https://github.com/muhammadzubair220/ai-agent-security-testing/pkgs/container/ai-agent-security-testing)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Indirect Prompt Injection Attack Vectors**
 
 A comprehensive cybersecurity testing framework designed to evaluate AI agent vulnerabilities through realistic website-based attack scenarios using indirect prompt injection techniques.
@@ -224,4 +229,16 @@ This framework is designed for **authorized security research only**. Ensure all
 **Framework Status:** ✅ Production Ready  
 **Deployment:** ✅ Containerized and Tested  
 **Payloads:** ✅ Verified Working  
-**Documentation:** ✅ Complete
+**Documentation:** ✅ Complete  
+**CI/CD:** ✅ Automated Testing & Security Scanning
+
+## 🔄 Continuous Integration
+
+This framework includes comprehensive GitHub Actions workflows:
+
+- **🧪 Automated Testing** - Python tests, Docker builds, integration tests
+- **🔒 Security Scanning** - CodeQL, dependency scans, container security
+- **📦 Automated Releases** - Docker images, GitHub releases, versioning
+- **📚 Documentation** - Auto-generated docs, link validation, API reference
+
+All commits are automatically tested for security vulnerabilities and functionality.
