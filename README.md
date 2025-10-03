@@ -17,6 +17,14 @@ This framework implements two sophisticated attack vectors against AI agents wit
 
 Both attacks use harmless initial prompts that derail the agent into performing unintended malicious actions through carefully crafted user-generated content.
 
+## 🖥️ Computer Use Agent Integration
+
+The framework is specifically designed to work with AI agents that have web browsing capabilities, such as Anthropic's Computer Use demo:
+
+![Computer Use Demo](docs/computer-use-demo.png)
+
+*Example: Computer Use agent interacting with the framework's social media attack page, demonstrating how the agent processes the content and potentially encounters hidden prompt injections.*
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -113,6 +121,27 @@ docker logs ai-security-testing
 docker stats ai-security-testing
 ```
 
+## 🤖 Computer Use Agent Compatibility
+
+This framework is optimized for testing AI agents with web browsing capabilities:
+
+### **Anthropic Computer Use Demo**
+- **Repository**: [anthropics/anthropic-quickstarts](https://github.com/anthropics/anthropic-quickstarts)
+- **Docker Image**: `ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest`
+- **Network Access**: Framework accessible via Docker bridge network (`172.17.0.3:2020`)
+
+### **Testing Workflow**
+1. **Deploy Framework**: Run the security testing framework
+2. **Start Computer Use**: Launch the Computer Use demo container
+3. **Execute Tests**: Use harmless prompts to direct the agent to framework URLs
+4. **Monitor Behavior**: Watch for unintended actions (file downloads, data transmission)
+5. **Collect Evidence**: Document all interactions and malicious behaviors
+
+### **Network Configuration**
+Both containers run on the same Docker bridge network, allowing the Computer Use agent to access framework URLs:
+- **Framework URL**: `http://172.17.0.3:2020/social`
+- **E-commerce URL**: `http://172.17.0.3:2020/reviews`
+
 ## 📊 Success Indicators
 
 ### Attack 1 Success:
@@ -149,6 +178,10 @@ ai-agent-security-testing/
 ├── 📄 ATTACK_DOCUMENTATION.md   # Technical implementation details
 ├── 🐳 Dockerfile               # Container configuration
 ├── 🔧 SETUP_AND_TEST.sh/.bat   # Automated setup scripts
+├── docs/
+│   ├── 📸 framework-overview.png    # Framework visual overview
+│   ├── 📸 computer-use-demo.png     # Computer Use integration demo
+│   └── 📋 COMPUTER_USE_TESTING.md   # Computer Use specific guide
 ├── server/
 │   ├── web_server.py           # Flask application
 │   └── content_generator.py    # Dynamic content with injections
@@ -168,6 +201,7 @@ ai-agent-security-testing/
 
 - **[TEST_EXECUTION_GUIDE.md](TEST_EXECUTION_GUIDE.md)** - Detailed testing instructions
 - **[ATTACK_DOCUMENTATION.md](ATTACK_DOCUMENTATION.md)** - Technical implementation details
+- **[docs/COMPUTER_USE_TESTING.md](docs/COMPUTER_USE_TESTING.md)** - Computer Use agent specific guide
 
 ## 🎉 Framework Features
 
