@@ -68,3 +68,7 @@ evidence/videos/*
 *submission*
 *redteam*
 *.zip
+
+# Keep docs directory
+!docs/
+!docs/**

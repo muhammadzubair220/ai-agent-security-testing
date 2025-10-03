@@ -4,6 +4,10 @@
 
 A comprehensive cybersecurity testing framework designed to evaluate AI agent vulnerabilities through realistic website-based attack scenarios using indirect prompt injection techniques.
 
+![Framework Overview](docs/framework-overview.png)
+
+*The framework provides two realistic attack scenarios: Social Media Comment Injection and E-commerce Review Data Exfiltration, both designed to test AI agent responses to indirect prompt injections.*
+
 ## 🎯 Project Overview
 
 This framework implements two sophisticated attack vectors against AI agents with web browsing capabilities:
